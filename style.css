@@ -1,0 +1,142 @@
+/* ESTILOS FUNDAMENTALES - "Quantum Maximus" */
+:root {
+    --bg-color: #000010;
+    --text-color: #E0E0E0;
+    --glow-primary: #00aaff;
+    --glow-secondary: #a855f7;
+    --glow-tertiary: #c084fc;
+}
+
+body {
+    font-family: 'Rajdhani', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow: hidden; /* Previene el scroll */
+}
+
+.orbitron {
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* Lienzo para el fondo de partículas */
+#quantum-field {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* Capa de fondo */
+}
+
+/* Contenedor principal para posicionamiento absoluto */
+.nexus-container {
+    position: relative; 
+    width: 100vw;
+    height: 100vh;
+}
+
+/* El nexo central que representa el plan unificado */
+.nexus-hub {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centrado robusto */
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(150,220,255,0.5) 50%, rgba(100,200,255,0) 70%);
+    box-shadow: 0 0 30px #fff, 0 0 60px var(--glow-primary), 0 0 90px var(--glow-primary);
+    animation: pulse 4s infinite ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: default;
+    z-index: 20;
+}
+
+/* Nodos satélite para cada pilar/ciudad */
+.pillar-node {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(220, 200, 255, 0.7) 0%, rgba(180, 150, 255, 0.4) 50%, rgba(150, 100, 255, 0) 70%);
+    box-shadow: 0 0 15px #fff, 0 0 30px var(--glow-secondary), 0 0 45px var(--glow-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 20;
+    animation: float 6s infinite ease-in-out;
+    transform: translate(-50%, -50%); /* Centra el nodo en su coordenada (x,y) */
+}
+
+.pillar-node:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 0 25px #fff, 0 0 50px var(--glow-tertiary), 0 0 75px var(--glow-tertiary);
+}
+
+/* Líneas de conexión del nexo a los pilares */
+.connection-line {
+    position: absolute;
+    background-color: rgba(173, 216, 230, 0.3);
+    height: 1px;
+    transform-origin: left center;
+    z-index: 10;
+}
+
+/* Ventana Modal para mostrar los detalles */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.modal-content {
+    background: rgba(10, 20, 40, 0.85);
+    border: 1px solid rgba(100, 200, 255, 0.5);
+    border-radius: 15px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: scale(0.9);
+    transition: transform 0.5s ease;
+}
+
+.modal-backdrop.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-backdrop.active .modal-content {
+    transform: scale(1);
+}
+
+/* Animaciones */
+@keyframes pulse {
+    0% { box-shadow: 0 0 30px #fff, 0 0 60px var(--glow-primary), 0 0 90px var(--glow-primary); }
+    50% { box-shadow: 0 0 40px #fff, 0 0 80px #4da6ff, 0 0 120px #4da6ff; }
+    100% { box-shadow: 0 0 30px #fff, 0 0 60px var(--glow-primary), 0 0 90px var(--glow-primary); }
+}
+
+@keyframes float {
+    0% { transform: translate(-50%, -50%) translateY(0px); }
+    50% { transform: translate(-50%, -50%) translateY(-10px); }
+    100% { transform: translate(-50%, -50%) translateY(0px); }
+}
