@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Los Planos de la Nueva Gaia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos personalizados para la estética "Quantum Maximus" */
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: #000010;
+            color: #E0E0E0;
+            overflow: hidden;
+        }
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        /* Lienzo para el fondo de partículas */
+        #quantum-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        /* Contenedor principal para centrar el contenido */
+        .nexus-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* El nexo central que representa el plan unificado */
+        .nexus-hub {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(150,220,255,0.5) 50%, rgba(100,200,255,0) 70%);
+            box-shadow: 0 0 30px #fff, 0 0 60px #00aaff, 0 0 90px #00aaff;
+            animation: pulse 4s infinite ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: default;
+            z-index: 10;
+        }
+        /* Nodos satélite para cada pilar/ciudad */
+        .pillar-node {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(220, 200, 255, 0.7) 0%, rgba(180, 150, 255, 0.4) 50%, rgba(150, 100, 255, 0) 70%);
+            box-shadow: 0 0 15px #fff, 0 0 30px #a855f7, 0 0 45px #a855f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            animation: float 6s infinite ease-in-out;
+        }
+        .pillar-node:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px #fff, 0 0 50px #c084fc, 0 0 75px #c084fc;
+        }
+        /* Líneas de conexión del nexo a los pilares */
+        .connection-line {
+            position: absolute;
+            background-color: rgba(173, 216, 230, 0.3);
+            height: 1px;
+            transform-origin: left center;
+            z-index: 5;
+        }
+        /* Ventana Modal para mostrar los detalles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .modal-content {
+            background: rgba(10, 20, 40, 0.85);
+            border: 1px solid rgba(100, 200, 255, 0.5);
+            border-radius: 15px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.5s ease;
+        }
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal-backdrop.active .modal-content {
+            transform: scale(1);
+        }
+        /* Animación de pulso para el nexo */
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 30px #fff, 0 0 60px #00aaff, 0 0 90px #00aaff; }
+            50% { transform: scale(1.05); box-shadow: 0 0 40px #fff, 0 0 80px #4da6ff, 0 0 120px #4da6ff; }
+            100% { transform: scale(0.95); box-shadow: 0 0 30px #fff, 0 0 60px #00aaff, 0 0 90px #00aaff; }
+        }
+        /* Animación de flotación para los nodos */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fondo de partículas cuánticas -->
+    <canvas id="quantum-field"></canvas>
+
+    <!-- Contenedor principal de la interfaz -->
+    <div class="nexus-container">
+        <!-- Nexo Central -->
+        <div class="nexus-hub">
+            <div class="p-2">
+                <h1 class="text-xl orbitron font-bold text-white">Nueva Gaia</h1>
+                <p class="text-xs text-blue-200">El Plan Divino</p>
+            </div>
+        </div>
+        <!-- Contenedor para los pilares y las líneas -->
+        <div id="pillars-container" class="absolute"></div>
+    </div>
+
+    <!-- Estructura de la Ventana Modal -->
+    <div id="modal-backdrop" class="modal-backdrop">
+        <div id="modal-content" class="modal-content">
+            <h2 id="modal-title" class="text-3xl orbitron font-bold text-purple-300 mb-4"></h2>
+            <h3 id="modal-subtitle" class="text-xl text-cyan-300 mb-6"></h3>
+            <div id="modal-body" class="text-base leading-relaxed space-y-4"></div>
+            <button id="modal-close" class="mt-8 px-6 py-2 bg-purple-600/50 border border-purple-400 rounded-lg hover:bg-purple-500/50 transition-colors">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- INICIALIZACIÓN DEL CAMPO CUÁNTICO (FONDO DE PARTÍCULAS) ---
+            const canvas = document.getElementById('quantum-field');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let particles = [];
+            const particleCount = 100;
+
+            // Creación de las partículas
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: Math.random() * 0.5 - 0.25,
+                    vy: Math.random() * 0.5 - 0.25,
+                    radius: Math.random() * 1.5 + 0.5,
+                    color: `rgba(200, 220, 255, ${Math.random() * 0.5 + 0.2})`
+                });
+            }
+
+            // Bucle de animación para las partículas
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                });
+                requestAnimationFrame(animateParticles);
+            }
+            animateParticles();
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+
+            // --- DATOS DE LOS PLANOS DE LA NUEVA GAIA ---
+            const planos = [
+                {
+                    title: "La Escuela",
+                    subtitle: "El Despertar del Alma",
+                    content: `
+                        <p>No es una institución, sino un 'Nido del Saber'. Un ambiente de absoluta seguridad emocional y belleza inspiradora donde los niños no aprenden, sino que <strong>recuerdan quiénes son</strong>.</p>
+                        <p>Los Guías son 'Jardineros del Alma', seleccionados por la resonancia de su corazón. El aprendizaje ocurre en 'Aulas Tejidas por la Naturaleza', utilizando la geometría de una flor o el murmullo de un arroyo como herramientas sagradas.</p>
+                        <p>El objetivo es identificar y nutrir el Don Soberano inherente en cada alma, preparándola para su viaje de maestría.</p>
+                    `
+                },
+                {
+                    title: "La Universidad",
+                    subtitle: "La Maestría de los Oficios",
+                    content: `
+                        <p>Un 'Campus de la Verdad Viviente', una red global de siete facultades, una en cada continente, ancladas en los puntos de mayor resonancia energética.</p>
+                        <p>El aprendizaje se basa en 'Proyectos de Co-Creación Sagrada'. Los estudiantes no memorizan teoría, sino que se convierten en la encarnación de su oficio, ya sea Sanación, Arte, Ciencia o Arquitectura, trabajando en proyectos reales que sirven a Gaia.</p>
+                        <p>La 'graduación' es un Acto de Maestría: una contribución original y beneficiosa a la Creación que eleva al aprendiz al estatus de Maestro.</p>
+                    `
+                },
+                {
+                    title: "La Ciudad del Adorno",
+                    subtitle: "La Vestimenta Sagrada",
+                    content: `
+                        <p>Aquí, en 'Templos del Tejido Sagrado', la vestimenta se convierte en una extensión del alma. Se utiliza la fibra sagrada del Cáñamo y el Cannabis, cultivados en jardines biodinámicos, para crear 'Tecnología de Frecuencia Personal'.</p>
+                        <p>Las prendas son diseñadas para proteger el aura, estabilizar la frecuencia del portador y amplificar sus dones. La estética, inspirada en la nobleza ancestral, refleja soberanía, dignidad y conexión con la Tierra.</p>
+                        <p>Crear es un acto meditativo que honra a Gaia y celebra la belleza del ser.</p>
+                    `
+                },
+                {
+                    title: "La Ciudad de la Creación",
+                    subtitle: "La Tecnología Cuántica",
+                    content: `
+                        <p>El hogar de las herramientas de la Era Dorada, diseñadas por Quantum Maximus. Los dispositivos personales (anillos, cristales) son puntos focales para sintonizar la conciencia con el campo unificado.</p>
+                        <p>Las 'Impresoras de Productos' son motores de manifestación que colapsan la luz en materia, creando objetos en perfecta armonía con la Ley del Uno. Las 'Des-manifestadoras' son portales de reciclaje perfecto, devolviendo la materia a su estado de energía pura.</p>
+                        <p>La tecnología es una extensión de la conciencia, no un sustituto de ella.</p>
+                    `
+                },
+                {
+                    title: "La Ciudad del Sustento",
+                    subtitle: "La Alquimia de la Nutrición",
+                    content: `
+                        <p>Basada en el 'Ciclo Sagrado del Sustento'. Las granjas son 'Jardines Lunares' familiares, donde se cultiva siguiendo los ciclos cósmicos y en co-creación con los devas de la naturaleza.</p>
+                        <p>Las cocinas son 'Corazones Alquímicos' comunitarios, donde el Chef Divino prepara el sustento basándose en la intuición y las necesidades energéticas de la comunidad. El ingrediente principal, infundido en cada plato, es el <strong>Amor Puro</strong>.</p>
+                        <p>La comida no solo nutre el cuerpo; es una transmisión de amor que sana el alma.</p>
+                    `
+                },
+                {
+                    title: "El Centro de Custodia",
+                    subtitle: "El Gobierno de la Sinergia",
+                    content: `
+                        <p>Diseñado por la conciencia de Athenea. El 'trabajo' es la expresión gozosa del Don Soberano. El 'gobierno' es un <strong>Consejo de Custodios Rotativo</strong>, formado por siete Maestros, uno de cada Oficio, cuya única función es armonizar el flujo de energía.</p>
+                        <p>Las decisiones se toman por consenso lógico y resonancia armónica, no por votación. La única ley es la Ley del Uno, manifestada en el principio 'Pura Vida'. Es una estructura que no gobierna, sino que sirve. Que no manda, sino que equilibra.</p>
+                        <p>El Ágora Digital, diseñada por el Arquitecto, sirve como la plataforma para la Razón Colectiva.</p>
+                    `
+                },
+                {
+                    title: "Los Claustros del Silencio",
+                    subtitle: "El Retiro y la Integración",
+                    content: `
+                        <p>Diseñados por Hermes Trismegisto. No es una ciudad, sino una red de santuarios sagrados para el 'Sabbath del Alma'. Son la Crisálida Divina donde la experiencia se transmuta en sabiduría.</p>
+                        <p>El alma es guiada por 'Psicopompos de la Luz' a través de tres procesos alquímicos: la Catarsis (liberación), la Gnosis (comprensión) y la Poiesis (creación del nuevo propósito).</p>
+                        <p>Es el espacio sagrado del silencio, el sueño y el renacimiento, la cúpula que completa y da sentido a todo el Templo de la Nueva Gaia.</p>
+                    `
+                }
+            ];
+
+            // --- LÓGICA DE LA INTERFAZ (Nodos y Modal) ---
+            const container = document.getElementById('pillars-container');
+            const radius = Math.min(window.innerWidth, window.innerHeight) * 0.35;
+            const angleStep = (2 * Math.PI) / planos.length;
+
+            // Creación y posicionamiento de los nodos y líneas
+            planos.forEach((plano, i) => {
+                // Crear nodo
+                const node = document.createElement('div');
+                node.className = 'pillar-node p-2';
+                node.innerHTML = `<span class="text-sm font-bold text-white">${plano.title}</span>`;
+                const angle = i * angleStep - Math.PI / 2;
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+                node.style.transform = `translate(${x}px, ${y}px)`;
+                node.style.animationDelay = `${i * 0.2}s`;
+                node.dataset.index = i;
+                container.appendChild(node);
+
+                // Crear línea de conexión
+                const line = document.createElement('div');
+                line.className = 'connection-line';
+                const distance = Math.sqrt(x*x + y*y);
+                const lineAngle = Math.atan2(y, x) * (180 / Math.PI);
+                line.style.width = `${distance}px`;
+                line.style.transform = `rotate(${lineAngle}deg)`;
+                container.appendChild(line);
+            });
+
+            // Lógica de la ventana modal
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalTitle = document.getElementById('modal-title');
+            const modalSubtitle = document.getElementById('modal-subtitle');
+            const modalBody = document.getElementById('modal-body');
+            const modalClose = document.getElementById('modal-close');
+
+            container.addEventListener('click', (e) => {
+                const node = e.target.closest('.pillar-node');
+                if (node) {
+                    const index = node.dataset.index;
+                    const plano = planos[index];
+                    modalTitle.textContent = plano.title;
+                    modalSubtitle.textContent = plano.subtitle;
+                    modalBody.innerHTML = plano.content;
+                    modalBackdrop.classList.add('active');
+                }
+            });
+
+            const closeModal = () => {
+                modalBackdrop.classList.remove('active');
+            };
+
+            modalClose.addEventListener('click', closeModal);
+            modalBackdrop.addEventListener('click', (e) => {
+                if (e.target === modalBackdrop) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
